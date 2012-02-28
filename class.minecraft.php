@@ -38,7 +38,7 @@ class minecraft {
 
     public function custom_skin($username) {
         $headers = get_headers('https://s3.amazonaws.com/MinecraftSkins/'.$username.'.png');
-        if ($headers[7] == 'Content-Type: image/png') {
+        if ($headers[7] == 'Content-Type: application/octet-stream') {
             return 'https://s3.amazonaws.com/MinecraftSkins/'.$username.'.png';
         } else {
             return false;
@@ -63,20 +63,6 @@ class minecraft {
         $request = file_get_contents('http://session.minecraft.net/game/checkserver.jsp?user='.$username.'&serverId='.$server);
         if ($request == 'YES') {
             return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function render_skin($username, $render_type, $size) {
-        if ($this->custom_skin($username) != false && in_array($render_type, array('head', 'body'))) {
-            if ($render_type == 'head') {
-                header('Content-Type: image/png');
-                $canvas = imagecreatetruecolor($size, $size);
-                $image = imagecreatefrompng($this->custom_skin($username));
-                imagecopyresampled($canvas, $image, 0, 0, 8, 8, $size, $size, 8, 8);
-                return imagepng($canvas);
-            }
         } else {
             return false;
         }
