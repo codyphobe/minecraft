@@ -18,7 +18,7 @@ class minecraft {
         $request = file_get_contents('https://login.minecraft.net/?user='.$username.'&password='.$password.'&version='.$version);
         $response = explode(':', $request);
         if ($request != 'Old version' && $request != 'Bad login') {
-            return $this->account = array(
+            $this->account = array(
                 'current_version' => $response[0],
                 'correct_username' => $response[2],
                 'session_token' => $response[3],
@@ -26,6 +26,7 @@ class minecraft {
                 'custom_skin' => $this->custom_skin($username),
                 'request_timestamp' => date("dmYhms", mktime(date(h), date(m), date(s), date(m), date(d), date(y)))
             );
+            return true;
         } else {
             return false;
         }
@@ -62,6 +63,20 @@ class minecraft {
         $request = file_get_contents('http://session.minecraft.net/game/checkserver.jsp?user='.$username.'&serverId='.$server);
         if ($request == 'YES') {
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function render_skin($username, $render_type, $size) {
+        if ($this->custom_skin($username) != false && in_array($render_type, array('head', 'body'))) {
+            header('Content-Type: image/png');
+            if ($render_type == 'head') {
+                $canvas = imagecreatetruecolor($size, $size);
+                $image = imagecreatefrompng($this->custom_skin($username));
+                imagecopyresampled($canvas, $image, 0, 0, 8, 8, $size, $size, 8, 8);
+                return imagepng($canvas);
+            }
         } else {
             return false;
         }
