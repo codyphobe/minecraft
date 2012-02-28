@@ -10,7 +10,9 @@ are you permitted to use this for malicious purposes.
     include('class.minecraft.php');
     $minecraft = new minecraft();
     if ($minecraft->login('username', 'password', '12') == true) {
-        // todo: Make some magic happen.
+        foreach($minecraft->account as $field => $value) {
+            echo('<strong>'.$field.'</strong>:&nbsp;'.$value.'<br>');
+        }
     }
 ?>
 ```
@@ -22,8 +24,21 @@ $minecraft->login('username', 'password', 'version');
 ```
 
 This function is used to login to your Minecraft account, taking 3 parameters: username, password and the version of the minecraft
-launcher which currently defaults to **12**. This returns an **array** with details on that users account on success and **false**
-otherwise.
+launcher which currently defaults to **12**. This returns **true** if the user was successfully authenticated and **false**
+otherwise. An array is also set upon successful login which contains the following...
+
+* current_version - The current version of the games resources.
+* correct_username - A correctly formatted username.
+* session_token - The current session used to login to the Minecraft client.
+* premium_account - If the account specified is of premium status.
+* custom_skin - The url to the users custom skin, if applicable.
+* request_timestamp - the timestamp for the request which is formatted as **DDMMYYYYHHMMSS** in local server time.
+
+This array can be called using the following function...
+
+```php
+$minecraft->account();
+```
 
 ```php
 $minecraft->is_premium('username');
