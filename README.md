@@ -89,7 +89,7 @@ $minecraft->render_skin('username', 'render_type', 'size');
 
 This function renders the specified players skin. It takes 3 parameters, the **username** of the player's skin to render, the **render_type** which
 is either **head** OR **body** (not implimented yet) and the **size** of the image to output in pixels. This function could even be used directly inside
-**img** tags like the following example...
+**img** tags like in the following example...
 
 ```html
 <img src="<?php echo($minecraft->render_skin('nblackburn', 'head', 100));?>" width="100" height="100">
