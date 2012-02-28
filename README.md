@@ -31,12 +31,12 @@ This function is used to login to your Minecraft account, taking 3 parameters: u
 launcher which currently defaults to **12**. This returns **true** if the user was successfully authenticated and **false**
 otherwise. An array is also set upon successful login which contains the following...
 
-**current_version**: The current version of the games resources.
-**correct_username**: A correctly formatted username.
-**session_token**: The current session used to login to the Minecraft client.
-**premium_account**: If the account specified is of premium status.
-**custom_skin**: The url to the users custom skin, if applicable.
-**request_timestamp**: the timestamp for the request which is formatted as **DDMMYYYYHHMMSS** in local server time.
+* **current_version**: The current version of the games resources.
+* **correct_username**: A correctly formatted username.
+* **session_token**: The current session used to login to the Minecraft client.
+* **premium_account**: If the account specified is of premium status.
+* **custom_skin**: The url to the users custom skin, if applicable.
+* **request_timestamp**: the timestamp for the request which is formatted as **DDMMYYYYHHMMSS** in local server time.
 
 ```php
 $minecraft->account();
