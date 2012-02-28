@@ -70,8 +70,8 @@ class minecraft {
 
     public function render_skin($username, $render_type, $size) {
         if ($this->custom_skin($username) != false && in_array($render_type, array('head', 'body'))) {
-            header('Content-Type: image/png');
             if ($render_type == 'head') {
+                header('Content-Type: image/png');
                 $canvas = imagecreatetruecolor($size, $size);
                 $image = imagecreatefrompng($this->custom_skin($username));
                 imagecopyresampled($canvas, $image, 0, 0, 8, 8, $size, $size, 8, 8);
