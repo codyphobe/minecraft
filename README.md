@@ -34,11 +34,12 @@ otherwise. An array is also set upon successful login which contains the followi
 * **custom_skin**: The url to the users custom skin, if applicable.
 * **request_timestamp**: the timestamp for the request which is formatted as **DDMMYYYYHHMMSS** in local server time.
 
-This array can be called using the following function...
-
 ```php
 $minecraft->account();
 ```
+
+This array can be called using the function above once the user has logged in to their account otherwise **null** will be returned
+when calling this function.
 
 ```php
 $minecraft->is_premium('username');
