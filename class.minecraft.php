@@ -79,7 +79,4 @@ class minecraft {
 
 }
 
-    $mc = new minecraft();
-    echo $mc->is_premium('nblackburn');
-
 ?>
