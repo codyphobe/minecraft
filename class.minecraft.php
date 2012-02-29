@@ -14,8 +14,17 @@ class minecraft {
 
     public $account;
 
+    private function request($website) {
+        $request = curl_init();
+        curl_setopt($request, CURLOPT_HEADER, 0);
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($request, CURLOPT_URL, $website);
+        return curl_exec($request);
+        curl_close($request);
+    }
+
     public function signin($username, $password, $version) {
-        $request = file_get_contents('https://login.minecraft.net/?user='.$username.'&password='.$password.'&version='.$version);
+        $request = $this->request('https://login.minecraft.net/?user='.$username.'&password='.$password.'&version='.$version);
         $response = explode(':', $request);
         if ($request != 'Old version' && $request != 'Bad login') {
             $this->account = array(
@@ -33,7 +42,7 @@ class minecraft {
     }
 
     public function is_premium($username) {
-        return file_get_contents('https://www.minecraft.net/haspaid.jsp?user='.$username);
+        return $this->request('https://www.minecraft.net/haspaid.jsp?user='.$username);
     }
 
     public function custom_skin($username) {
@@ -46,12 +55,12 @@ class minecraft {
     }
 
     public function keep_alive($username, $session) {
-        $request = file_get_contents('https://login.minecraft.net/session?name='.$username.'&session='.$session);
+        $request = $this->request('https://login.minecraft.net/session?name='.$username.'&session='.$session);
         return null;
     }
 
     public function join_server($username, $session, $server) {
-        $request = file_get_contents('http://session.minecraft.net/game/joinserver.jsp?user='.$username.'&sessionId='.$session.'&serverId='.$server);
+        $request = $this->request('http://session.minecraft.net/game/joinserver.jsp?user='.$username.'&sessionId='.$session.'&serverId='.$server);
         if ($request != 'Bad login') {
             return true;
         } else {
@@ -60,7 +69,7 @@ class minecraft {
     }
 
     public function check_server($username, $server) {
-        $request = file_get_contents('http://session.minecraft.net/game/checkserver.jsp?user='.$username.'&serverId='.$server);
+        $request = $this->request('http://session.minecraft.net/game/checkserver.jsp?user='.$username.'&serverId='.$server);
         if ($request == 'YES') {
             return true;
         } else {
@@ -69,5 +78,8 @@ class minecraft {
     }
 
 }
+
+    $mc = new minecraft();
+    echo $mc->is_premium('nblackburn');
 
 ?>
