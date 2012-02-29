@@ -80,3 +80,20 @@ $minecraft->account['session_token'];
 ```
 
 The function returns **null** as the Minecraft server doesnt appear to throw back any exceptions or acknowledgement of the request.
+
+---
+
+```php
+$minecraft->render_skin($username, $render_type, $size);
+```
+
+This function renders the specified player's skin. It takes 3 parameters, the first being the **username** of the player whos skin you wish to render,
+the **render_type** which can either be **head** OR **body** and the **size** you would like the rendered image to be. Please note when rendering
+the full body, the image width is half the size of the image height. You can include this function directly inside a **img** tag by using the following
+example...
+
+```html
+<img src="<?php echo($minecraft->render_skin('nblackburn', 'head', 100)) ?>" width="100" height="100">
+```
+
+---
