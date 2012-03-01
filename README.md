@@ -57,11 +57,11 @@ returns **true** if a premium account was detected and **false** otherwise.
 ---
 
 ```php
-$minecraft->custom_skin('username');
+$minecraft->get_skin('username');
 ```
 
-This function checks if the user specified has a custom skin. It takes a single parameter of **username** and either returns
-the url to the users skin or **false** if not custom skin was found.
+This function firstly checks the user specified has a premium account, then returns a url to the skin file for that user if
+a custom skin was found. It takes a single parameter which is the **username** of the user you which to get the skin file of.
 
 ---
 
