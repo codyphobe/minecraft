@@ -10,7 +10,7 @@
  * @website: http://nblackburn.me
 */
 
-class Minecraft {
+class minecraft {
 
     public $account;
 
@@ -108,3 +108,5 @@ class Minecraft {
     }
 
 }
+
+?>
