@@ -35,7 +35,7 @@ otherwise. An array is also set upon successful login which contains the followi
 * **correct_username**: A correctly formatted username.
 * **session_token**: The current session used to login to the Minecraft client.
 * **premium_account**: If the account specified is of premium status.
-* **custom_skin**: The url to the users custom skin, if applicable.
+* **player_skin**: The url to the users custom skin, if applicable.
 * **request_timestamp**: the timestamp for the request which is formatted as **DDMMYYYYHHMMSS** in local server time.
 
 ```php
@@ -57,11 +57,11 @@ returns **true** if a premium account was detected and **false** otherwise.
 ---
 
 ```php
-$minecraft->custom_skin('username');
+$minecraft->get_skin('username');
 ```
 
-This function checks if the user specified has a custom skin. It takes a single parameter of **username** and either returns
-the url to the users skin or **false** if not custom skin was found.
+This function firstly checks the user specified has a premium account, then returns a url to the skin file for that user if
+a custom skin was found. It takes a single parameter which is the **username** of the user you which to get the skin file of.
 
 ---
 

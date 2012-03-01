@@ -32,7 +32,7 @@ class minecraft {
                 'correct_username' => $response[2],
                 'session_token' => $response[3],
                 'premium_account' => $this->is_premium($username),
-                'custom_skin' => $this->custom_skin($username),
+                'player_skin' => $this->get_skin($username),
                 'request_timestamp' => date("dmYhms", mktime(date(h), date(m), date(s), date(m), date(d), date(y)))
             );
             return true;
@@ -45,10 +45,14 @@ class minecraft {
         return $this->request('https://www.minecraft.net/haspaid.jsp?user='.$username);
     }
 
-    public function custom_skin($username) {
-        $headers = get_headers('http://s3.amazonaws.com/MinecraftSkins/'.$username.'.png');
-        if ($headers[7] == 'Content-Type: image/png' || $headers[7] == 'Content-Type: application/octet-stream') {
-            return 'http://s3.amazonaws.com/MinecraftSkins/'.$username.'.png';
+    public function get_skin($username) {
+        if ($this->is_premium($username)) {
+            $headers = get_headers('http://s3.amazonaws.com/MinecraftSkins/'.$username.'.png');
+            if ($headers[7] == 'Content-Type: image/png' || $headers[7] == 'Content-Type: application/octet-stream') {
+                return 'https://s3.amazonaws.com/MinecraftSkins/'.$username.'.png';
+            } else {
+                return 'https://s3.amazonaws.com/MinecraftSkins/char.png';
+            }
         } else {
             return false;
         }
@@ -78,18 +82,18 @@ class minecraft {
     }
 
     public function render_skin($username, $render_type, $size) {
-        if ($this->custom_skin($username) != false && in_array($render_type, array('head', 'body'))) {
+        if (in_array($render_type, array('head', 'body'))) {
             if ($render_type == 'head') {
                 header('Content-Type: image/png');
                 $canvas = imagecreatetruecolor($size, $size);
-                $image = imagecreatefrompng($this->custom_skin($username));
+                $image = imagecreatefrompng($this->get_skin($username));
                 imagecopyresampled($canvas, $image, 0, 0, 8, 8, $size, $size, 8, 8);
                 return imagepng($canvas);
             } else if($render_type == 'body') {
                 header('Content-Type: image/png');
                 $scale = $size / 16;
                 $canvas = imagecreatetruecolor(16*$scale, 32*$scale);
-                $image = imagecreatefrompng($this->custom_skin($username));
+                $image = imagecreatefrompng($this->get_skin($username));
                 imagealphablending($canvas, false);
                 imagesavealpha($canvas,true);
                 $transparent = imagecolorallocatealpha($canvas, 255, 255, 255, 127);
