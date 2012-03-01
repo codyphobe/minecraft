@@ -4,8 +4,8 @@
  * @product: Minecraft Account Class
  * @description: Provides a set of useful functions to intergrate Minecraft within your projects.
  * @author: Nathaniel Blackburn
- * @version: 1.0
- * @revised: 25/02/2012 @ 22:43 PM (UST)
+ * @version: 1.0.5
+ * @revised: 01/03/2012 @ 00:09 PM (UST)
  * @support: support@nblackburn.me
  * @website: http://nblackburn.me
 */
