@@ -23,6 +23,8 @@ are you permitted to use this for malicious purposes.
 
 **Functions**
 
+### Login
+
 ```php
 $minecraft->login('username', 'password', 'version');
 ```
@@ -47,6 +49,8 @@ when calling this function.
 
 ---
 
+### Is Premium
+
 ```php
 $minecraft->is_premium('username');
 ```
@@ -56,6 +60,8 @@ returns **true** if a premium account was detected and **false** otherwise.
 
 ---
 
+### Get Skin
+
 ```php
 $minecraft->get_skin('username');
 ```
@@ -64,6 +70,8 @@ This function firstly checks the user specified has a premium account, then retu
 a custom skin was found. It takes a single parameter which is the **username** of the user you which to get the skin file of.
 
 ---
+
+### Keep Alive
 
 ```php
 $minecraft->keep_alive('username', 'session');
@@ -75,6 +83,8 @@ in to your account, this can be obtained with the following code...
 
 ---
 
+### Account
+
 ```php
 $minecraft->account['session_token'];
 ```
@@ -82,6 +92,8 @@ $minecraft->account['session_token'];
 The function returns **null** as the Minecraft server doesnt appear to throw back any exceptions or acknowledgement of the request.
 
 ---
+
+### Render Skin
 
 ```php
 $minecraft->render_skin($username, $render_type, $size);
