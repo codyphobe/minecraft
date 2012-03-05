@@ -21,8 +21,6 @@ are you permitted to use this for malicious purposes.
 
 ---
 
-**Functions**
-
 ### Login
 
 ```php
