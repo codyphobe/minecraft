@@ -15,3 +15,9 @@ Added new function render_skin.
 Updated all functions to utilize CURL rather than file_get_contents.
 Code optimizations.
 ```
+
+**1.0.0**
+
+```
+Initial release.
+```
