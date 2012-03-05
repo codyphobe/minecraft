@@ -1,5 +1,7 @@
 # Changelog
 
+All the changes, improvements and optimizations made to the Minecraft class will be listed here.
+
 **1.0.5**
 
 ```
