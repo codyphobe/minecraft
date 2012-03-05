@@ -21,7 +21,7 @@ are you permitted to use this for malicious purposes.
 
 ---
 
-### Login
+#### Login
 
 ```php
 $minecraft->login('username', 'password', 'version');
@@ -47,7 +47,7 @@ when calling this function.
 
 ---
 
-### Is Premium
+#### Is Premium
 
 ```php
 $minecraft->is_premium('username');
@@ -58,7 +58,7 @@ returns **true** if a premium account was detected and **false** otherwise.
 
 ---
 
-### Get Skin
+#### Get Skin
 
 ```php
 $minecraft->get_skin('username');
@@ -69,7 +69,7 @@ a custom skin was found. It takes a single parameter which is the **username** o
 
 ---
 
-### Keep Alive
+#### Keep Alive
 
 ```php
 $minecraft->keep_alive('username', 'session');
@@ -81,7 +81,7 @@ in to your account, this can be obtained with the following code...
 
 ---
 
-### Account
+#### Account
 
 ```php
 $minecraft->account['session_token'];
@@ -91,7 +91,7 @@ The function returns **null** as the Minecraft server doesnt appear to throw bac
 
 ---
 
-### Render Skin
+#### Render Skin
 
 ```php
 $minecraft->render_skin($username, $render_type, $size);
