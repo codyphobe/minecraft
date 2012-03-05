@@ -3,8 +3,6 @@
 This class was developed to provide a set of functions to integrate Minecraft within your projects. Under no circumstances
 are you permitted to use this for malicious purposes.
 
----
-
 #### Example Usage
 
 ```php
