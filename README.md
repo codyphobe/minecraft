@@ -5,7 +5,7 @@ are you permitted to use this for malicious purposes.
 
 ---
 
-**Example Usage**
+#### Example Usage
 
 ```php
 <?php
