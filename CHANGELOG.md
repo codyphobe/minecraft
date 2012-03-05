@@ -4,4 +4,5 @@
 
 ```
 custom_skin was renamed to player_skin in the signin function.
+Code optimizations.
 ```
