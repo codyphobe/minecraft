@@ -6,6 +6,7 @@ All the changes, improvements and optimizations made to the Minecraft class will
 
 ```
 - The custom_skin variable was renamed to player_skin in the signin function.
+- The get_skin function was rewritten to check if the player specified has a premium account before returning either the url to the custom skin or the default skin.
 - Code optimizations.
 - Updated documentation.
 ```
@@ -29,13 +30,15 @@ All the changes, improvements and optimizations made to the Minecraft class will
 **1.0.2**
 
 ```
-- Coming soon...
+- Improved documentation formatting.
+- Minor bug fixes.
 ```
 
 **1.0.1**
 
 ```
-- Coming soon...
+- Minor bug fixes.
+- Improved function usage.
 ```
 
 **1.0.0**
