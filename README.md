@@ -8,7 +8,6 @@ are you permitted to use this for malicious purposes.
 ```php
 <?php
     include('class.minecraft.php');
-    $minecraft = new minecraft();
     if ($minecraft->login('username', 'password', '12') == true) {
         foreach($minecraft->account as $field => $value) {
             echo('<strong>'.$field.'</strong>:&nbsp;'.$value.'<br>');
