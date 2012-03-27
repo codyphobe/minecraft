@@ -24,7 +24,8 @@
 		}
 
 		public function signin($username, $password, $version) {
-			$request = $this->request('https://login.minecraft.net/?user='.$username.'&password='.$password.'&version='.$version);
+			$parameters = array('username' => $username, 'password' => $password, 'version' => $version);
+			$request = $this->request('https://login.minecraft.net/?', $parameters);
 			$response = explode(':', $request);
 			if ($request != 'Old version' && $request != 'Bad login') {
 				$this->account = array(
