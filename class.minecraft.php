@@ -118,6 +118,5 @@
 	}
 	
 	$minecraft = new minecraft();
-	echo $minecraft->is_premium('nblackburn');
 
 ?>
