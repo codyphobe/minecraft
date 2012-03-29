@@ -2,6 +2,13 @@
 
 All the changes, improvements and optimizations made to the Minecraft class will be listed here.
 
+**1.0.6**
+
+```
+- Minor bug fixes.
+- Intergrated http_build_query() for improved performance and a cleaner function structure.
+```
+
 **1.0.5**
 
 ```
