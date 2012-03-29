@@ -8,11 +8,13 @@ are you permitted to use this for malicious purposes.
 ```php
 <?php
     include('class.minecraft.php');
-    if ($minecraft->login('username', 'password', '12') == true) {
-        foreach($minecraft->account as $field => $value) {
-            echo('<strong>'.$field.'</strong>:&nbsp;'.$value.'<br>');
-        }
-    }
+	if ($minecraft->signin('nblackburn', 'rachel19', '12') == true) {
+		foreach($minecraft->account as $field => $value) {
+			echo($field.'->'.$value.'<br>');
+		}
+	} else {
+		echo('Error!');
+	}
 ?>
 ```
 
