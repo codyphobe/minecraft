@@ -4,7 +4,7 @@
      * @product: Minecraft Class
      * @description: Intergrate Minecraft within your own projects.
      * @author: Nathaniel Blackburn
-     * @version: 1.6
+     * @version: 1.9
      * @license: http://creativecommons.org/licenses/by/3.0/legalcode
      * @support: support@nblackburn.me
      * @website: http://www.nblackburn.me
@@ -14,17 +14,22 @@ class minecraft {
 
     public $account;
 
-    private function request($website) {
+    private function request($website, array $parameters) {
         $request = curl_init();
         curl_setopt($request, CURLOPT_HEADER, 0);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($request, CURLOPT_URL, $website);
+        if ($parameters != null) {
+            curl_setopt($request, CURLOPT_URL, $website.'?'.http_build_query($parameters, null, '&'));
+        } else {
+            curl_setopt($request, CURLOPT_URL, $website);
+        }
         return curl_exec($request);
         curl_close($request);
     }
 
     public function signin($username, $password, $version) {
-        $request = $this->request('https://login.minecraft.net/?user='.$username.'&password='.$password.'&version='.$version);
+        $parameters = array('user' => $username, 'password' => $password, 'version' => $version);
+        $request = $this->request('https://login.minecraft.net/', $parameters);
         $response = explode(':', $request);
         if ($request != 'Old version' && $request != 'Bad login') {
             $this->account = array(
@@ -42,7 +47,8 @@ class minecraft {
     }
 
     public function is_premium($username) {
-        return $this->request('https://www.minecraft.net/haspaid.jsp?user='.$username);
+        $parameters = array('user' => $username);
+        return $this->request('https://www.minecraft.net/haspaid.jsp', $parameters);
     }
 
     public function get_skin($username) {
@@ -59,12 +65,14 @@ class minecraft {
     }
 
     public function keep_alive($username, $session) {
-        $request = $this->request('https://login.minecraft.net/session?name='.$username.'&session='.$session);
+        $parameters = array('name' => $username, 'session' => $session);
+        $request = $this->request('https://login.minecraft.net/session', $parameters);
         return null;
     }
 
     public function join_server($username, $session, $server) {
-        $request = $this->request('http://session.minecraft.net/game/joinserver.jsp?user='.$username.'&sessionId='.$session.'&serverId='.$server);
+        $parameters = array('user' => $username, 'sessionId' => $session, 'serverId' => $server);
+        $request = $this->request('http://session.minecraft.net/game/joinserver.jsp', $parameters);
         if ($request != 'Bad login') {
             return true;
         } else {
@@ -73,7 +81,8 @@ class minecraft {
     }
 
     public function check_server($username, $server) {
-        $request = $this->request('http://session.minecraft.net/game/checkserver.jsp?user='.$username.'&serverId='.$server);
+        $parameters = array('user' => $username, 'serverId' => $server);
+        $request = $this->request('http://session.minecraft.net/game/checkserver.jsp', $parameters);
         if ($request == 'YES') {
             return true;
         } else {
