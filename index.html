@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Minecraft by nblackburn</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/nblackburn/minecraft">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/nblackburn/minecraft/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/nblackburn/minecraft/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Minecraft</h1>
+          <p>A class that enables developers to intergrate Minecraft within their own projects.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/nblackburn">nblackburn</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>Minecraft Class</h1>
+
+<p>This class was developed to provide a set of functions to integrate Minecraft within your projects. Under no circumstances
+are you permitted to use this for malicious purposes.</p>
+
+<h4>Example Usage</h4>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="k">include</span><span class="p">(</span><span class="s1">'class.minecraft.php'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$minecraft</span><span class="o">-&gt;</span><span class="na">signin</span><span class="p">(</span><span class="s1">'username'</span><span class="p">,</span> <span class="s1">'password'</span><span class="p">,</span> <span class="s1">'12'</span><span class="p">)</span> <span class="o">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">foreach</span><span class="p">(</span><span class="nv">$minecraft</span><span class="o">-&gt;</span><span class="na">account</span> <span class="k">as</span> <span class="nv">$field</span> <span class="o">=&gt;</span> <span class="nv">$value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">echo</span><span class="p">(</span><span class="nv">$field</span><span class="o">.</span><span class="s1">'-&gt;'</span><span class="o">.</span><span class="nv">$value</span><span class="o">.</span><span class="s1">'&lt;br&gt;'</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">echo</span><span class="p">(</span><span class="s1">'Error!'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<hr><h4>Login</h4>
+
+<div class="highlight">
+<pre><span class="x">$minecraft-&gt;login('username', 'password', 'version');</span>
+</pre>
+</div>
+
+
+<p>This function is used to login to your Minecraft account, taking 3 parameters: username, password and the version of the minecraft
+launcher which currently defaults to <strong>12</strong>. This returns <strong>true</strong> if the user was successfully authenticated and <strong>false</strong>
+otherwise. An array is also set upon successful login which contains the following...</p>
+
+<ul>
+<li>
+<strong>current_version</strong>: The current version of the games resources.</li>
+<li>
+<strong>correct_username</strong>: A correctly formatted username.</li>
+<li>
+<strong>session_token</strong>: The current session used to login to the Minecraft client.</li>
+<li>
+<strong>premium_account</strong>: If the account specified is of premium status.</li>
+<li>
+<strong>player_skin</strong>: The url to the users custom skin, if applicable.</li>
+<li>
+<strong>request_timestamp</strong>: the timestamp for the request which is formatted as <strong>DDMMYYYYHHMMSS</strong> in local server time.</li>
+</ul><div class="highlight">
+<pre><span class="x">$minecraft-&gt;account();</span>
+</pre>
+</div>
+
+
+<p>This array can be called using the function above once the user has logged in to their account otherwise <strong>null</strong> will be returned
+when calling this function.</p>
+
+<hr><h4>Is Premium</h4>
+
+<div class="highlight">
+<pre><span class="x">$minecraft-&gt;is_premium('username');</span>
+</pre>
+</div>
+
+
+<p>This function determines if the user specified has a premium account or not. It takes a single parameter of <strong>username</strong> and
+returns <strong>true</strong> if a premium account was detected and <strong>false</strong> otherwise.</p>
+
+<hr><h4>Get Skin</h4>
+
+<div class="highlight">
+<pre><span class="x">$minecraft-&gt;get_skin('username');</span>
+</pre>
+</div>
+
+
+<p>This function firstly checks the user specified has a premium account, then returns a url to the skin file for that user if
+a custom skin was found. It takes a single parameter which is the <strong>username</strong> of the user you which to get the skin file of.</p>
+
+<hr><h4>Keep Alive</h4>
+
+<div class="highlight">
+<pre><span class="x">$minecraft-&gt;keep_alive('username', 'session');</span>
+</pre>
+</div>
+
+
+<p>This function is used to keep the users current session alive, this command needs sending to the Minecraft servers every 600
+ticks (60 seconds) otherwise the user is signed out. It takes 2 parameters, the <strong>username</strong> and <strong>session</strong> returned from signing
+in to your account, this can be obtained with the following code...</p>
+
+<hr><h4>Account</h4>
+
+<div class="highlight">
+<pre><span class="x">$minecraft-&gt;account['session_token'];</span>
+</pre>
+</div>
+
+
+<p>The function returns <strong>null</strong> as the Minecraft server doesnt appear to throw back any exceptions or acknowledgement of the request.</p>
+
+<hr><h4>Render Skin</h4>
+
+<div class="highlight">
+<pre><span class="x">$minecraft-&gt;render_skin($username, $render_type, $size);</span>
+</pre>
+</div>
+
+
+<p>This function renders the specified player's skin. It takes 3 parameters, the first being the <strong>username</strong> of the player whos skin you wish to render,
+the <strong>render_type</strong> which can either be <strong>head</strong> OR <strong>body</strong> and the <strong>size</strong> you would like the rendered image to be. Please note when rendering
+the full body, the image width is half the size of the image height. You can include this function directly inside a <strong>img</strong> tag by using the following
+example...</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"&lt;?php echo($minecraft-&gt;render_skin('nblackburn', 'head', 100)) ?&gt;"</span> <span class="na">width=</span><span class="s">"100"</span> <span class="na">height=</span><span class="s">"100"</span><span class="nt">&gt;</span>
+</pre>
+</div>
+
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32388928-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
