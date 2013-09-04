@@ -4,17 +4,15 @@
      * @product: Minecraft Class
      * @description: Intergrate Minecraft within your own projects.
      * @author: Nathaniel Blackburn
-     * @version: 1.9
+     * @version: 2.0
      * @license: http://creativecommons.org/licenses/by/3.0/legalcode
-     * @support: support@nblackburn.me
-     * @website: http://www.nblackburn.me
     */
 
 class minecraft {
 
     public $account;
 
-    private function request($url, array $parameters) {
+    protected function request($url, array $parameters) {
         $request = curl_init();
         curl_setopt($request, CURLOPT_HEADER, 0);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
