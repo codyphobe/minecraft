@@ -23,7 +23,7 @@ are you permitted to use this for malicious purposes.
 #### Login
 
 ```php
-$minecraft->login('username', 'password', 'version');
+$minecraft->signin('username', 'password', 'version');
 ```
 
 This function is used to login to your Minecraft account, taking 3 parameters: username, password and the version of the minecraft
@@ -36,13 +36,6 @@ otherwise. An array is also set upon successful login which contains the followi
 * **premium_account**: If the account specified is of premium status.
 * **player_skin**: The url to the users custom skin, if applicable.
 * **request_timestamp**: the timestamp for the request which is formatted as **DDMMYYYYHHMMSS** in local server time.
-
-```php
-$minecraft->account();
-```
-
-This array can be called using the function above once the user has logged in to their account otherwise **null** will be returned
-when calling this function.
 
 ---
 
