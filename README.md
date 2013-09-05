@@ -80,7 +80,7 @@ this can be obtained with the code above...
 $minecraft->account['session_token'];
 ```
 
-The variable contains **null** if you didn't signed in correctly.
+This variable is **null** if you didn't sign in correctly.
 
 ---
 
