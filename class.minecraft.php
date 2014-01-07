@@ -13,6 +13,14 @@ class minecraft {
     public $account = false;
     protected $_lastError = false;
 
+    /**
+     * Send a curl request
+     * Note that the CURLOPT_SSL_VERIFYPEER option is set to false to reduce the error probability
+     *
+     * @param  string $url        The url to send the request to
+     * @param  array  $parameters An array of parameters to add to the url (using GET)
+     * @return mixed
+     */
     protected function _request($url, array $parameters) {
         $request = curl_init();
         curl_setopt($request, CURLOPT_HEADER, 0);
@@ -29,14 +37,16 @@ class minecraft {
         return $ret;
     }
 
-    protected function _getUsername() {
-        if($this->account) {
-            return $this->account['correct_username'];
-        }
-
-        throw new Exception('You should use the signin method successfully before or precise the username');
-    }
-
+    /**
+     * Signin trough login.minecraft.net
+     * If the function return false, the getLastError() method
+     * will return the error which caused the login to fail
+     *
+     * @param  string  $username The username (should be an email since the mojang account migration)
+     * @param  string  $password The corresponding password
+     * @param  int     $version  The launcher version (12 for the current version on 2014-01-07)
+     * @return bool
+     */
     public function signin($username, $password, $version = 12) {
         $error_msg = [
             'Account migrated, use e-mail as username.',
@@ -58,8 +68,8 @@ class minecraft {
             'current_version' => $response[0],
             'correct_username' => $response[2],
             'session_token' => $response[3],
-            'premium_account' => $this->is_premium($response[2]),
-            'player_skin' => $this->get_skin($response[2]),
+            'premium_account' => $this->isPremium($response[2]),
+            'player_skin' => $this->getSkinUrl($response[2]),
             'request_timestamp' => date("dmYhms")
         );
 
@@ -68,44 +78,65 @@ class minecraft {
         return true;
     }
 
-    public function is_premium($username = false) {
+    /**
+     * Let you know if the user own a premium minecraft version
+     *
+     * @param  string $username The username to check (if ommited, will use the last user of a successfull signin call)
+     * @return bool
+     */
+    public function isPremium($username = false) {
         if($username === false) {
-            $username = $this->_getUsername();
+            $username = $this->getUsername();
         }
 
         $parameters = array('user' => $username);
         return $this->_request('https://minecraft.net/haspaid.jsp', $parameters) == 'true';
     }
 
-    public function get_skin($username = false) {
+    /**
+     * This function firstly checks the user specified has a premium account,
+     * then returns an url to the skin file for that user if a custom skin was found.
+     *
+     * @param  string $username The username to check (if ommited, will use the last user of a successfull signin call)
+     * @return string / false
+     */
+    public function getSkinUrl($username = false) {
         if($username === false) {
-            $username = $this->_getUsername();
+            $username = $this->getUsername();
         }
 
-        if ($this->is_premium($username)) {
+        if ($this->isPremium($username)) {
             $headers = get_headers('http://s3.amazonaws.com/MinecraftSkins/' . $username . '.png');
             if ($headers[7] == 'Content-Type: image/png' || $headers[7] == 'Content-Type: application/octet-stream') {
                 return 'https://s3.amazonaws.com/MinecraftSkins/' . $username . '.png';
-            } else {
-                return 'https://s3.amazonaws.com/MinecraftSkins/char.png';
             }
-        } else {
-            return false;
+            return 'https://s3.amazonaws.com/MinecraftSkins/char.png';
         }
+        return false;
     }
 
-    public function keep_alive($session, $username = false) {
-        if($username === false) {
-            $username = $this->_getUsername();
+    /**
+     * This function is used to keep the user's current session alive, this command needs to be
+     * sent to the Minecraft servers every 600 ticks (60 seconds) otherwise the user is signed out.
+     *
+     * @param  string $session  The session token
+     * @param  string $username
+     * @return '--' (Strange return value, wonder if it's normal...)
+     */
+    public function keepAlive($session = false, $username = false) {
+        if($session === false && $username === false) {
+            $username = $this->getUsername();
+            // No need to check if the signin method has been called since the getUsername already does it
+            $session = $this->account['session_token'];
         }
 
         $parameters = array('name' => $username, 'session' => $session);
         return $this->_request('https://login.minecraft.net/session', $parameters);
     }
 
-    public function join_server($session, $server, $username = false) {
+    public function joinServer($session, $server, $username = false) {
         if($username === false) {
-            $username = $this->_getUsername();
+            $username = $this->getUsername();
         }
 
         $parameters = array('user' => $username, 'sessionId' => $session, 'serverId' => $server);
@@ -113,9 +144,9 @@ class minecraft {
         return $request != 'Bad login';
     }
 
-    public function check_server($server, $username = false) {
+    public function checkServer($server, $username = false) {
         if($username === false) {
-            $username = $this->_getUsername();
+            $username = $this->getUsername();
         }
 
         $parameters = array('user' => $username, 'serverId' => $server);
@@ -123,16 +154,16 @@ class minecraft {
         return $request == 'YES';
     }
 
-    public function render_skin($render_type, $size, $username = false) {
+    public function renderSkin($render_type, $size, $username = false) {
         if($username === false) {
-            $username = $this->_getUsername();
+            $username = $this->getUsername();
         }
 
         if (in_array($render_type, array('head', 'body'))) {
             header('Content-Type: image/png');
             if ($render_type == 'head') {
                 $canvas = imagecreatetruecolor($size, $size);
-                $image = imagecreatefrompng($this->get_skin($username));
+                $image = imagecreatefrompng($this->getSkinUrl($username));
                 imagecopyresampled($canvas, $image, 0, 0, 8, 8, $size, $size, 8, 8);
 
                 return imagepng($canvas);
@@ -141,7 +172,7 @@ class minecraft {
             if($render_type == 'body') {
                 $scale = $size / 16;
                 $canvas = imagecreatetruecolor(16*$scale, 32*$scale);
-                $image = imagecreatefrompng($this->get_skin($username));
+                $image = imagecreatefrompng($this->getSkinUrl($username));
                 imagealphablending($canvas, false);
                 imagesavealpha($canvas,true);
                 $transparent = imagecolorallocatealpha($canvas, 255, 255, 255, 127);
@@ -158,6 +189,14 @@ class minecraft {
         }
 
         return false;
+    }
+
+    public function getUsername() {
+        if($this->account) {
+            return $this->account['correct_username'];
+        }
+
+        throw new Exception('You should use the signin method successfully before or precise the username');
     }
 
     public function getLastError() {
