@@ -1,11 +1,11 @@
 <?php
 
     /*
-     * @product: Minecraft Class
+     * @product:     Minecraft Class
      * @description: Intergrate Minecraft within your own projects.
-     * @author: Nathaniel Blackburn
-     * @version: 2.0
-     * @license: http://creativecommons.org/licenses/by/3.0/legalcode
+     * @author:      Nathaniel Blackburn
+     * @version:     2.0
+     * @license:     http://creativecommons.org/licenses/by/3.0/legalcode
     */
 
 class minecraft {
@@ -29,12 +29,12 @@ class minecraft {
     }
 
     public function signin($username, $password, $version) {
-    	$error_msg = [
-    		'Account migrated, use e-mail as username.',
-    		'Old version',
-    		'Bad login',
-    		'Bad request'
-    	];
+        $error_msg = [
+            'Account migrated, use e-mail as username.',
+            'Old version',
+            'Bad login',
+            'Bad request'
+        ];
         $parameters = array('user' => $username, 'password' => $password, 'version' => $version);
         $request = $this->request('https://login.minecraft.net/', $parameters);
         $response = explode(':', $request);
@@ -62,9 +62,9 @@ class minecraft {
 
     public function get_skin($username) {
         if ($this->is_premium($username)) {
-            $headers = get_headers('http://s3.amazonaws.com/MinecraftSkins/'.$username.'.png');
+            $headers = get_headers('http://s3.amazonaws.com/MinecraftSkins/' . $username . '.png');
             if ($headers[7] == 'Content-Type: image/png' || $headers[7] == 'Content-Type: application/octet-stream') {
-                return 'https://s3.amazonaws.com/MinecraftSkins/'.$username.'.png';
+                return 'https://s3.amazonaws.com/MinecraftSkins/' . $username . '.png';
             } else {
                 return 'https://s3.amazonaws.com/MinecraftSkins/char.png';
             }
@@ -75,28 +75,19 @@ class minecraft {
 
     public function keep_alive($username, $session) {
         $parameters = array('name' => $username, 'session' => $session);
-        $request = $this->request('https://login.minecraft.net/session', $parameters);
-        return $request;
+        return $this->request('https://login.minecraft.net/session', $parameters);
     }
 
     public function join_server($username, $session, $server) {
         $parameters = array('user' => $username, 'sessionId' => $session, 'serverId' => $server);
         $request = $this->request('http://session.minecraft.net/game/joinserver.jsp', $parameters);
-        if ($request != 'Bad login') {
-            return true;
-        } else {
-            return false;
-        }
+        return $request != 'Bad login';
     }
 
     public function check_server($username, $server) {
         $parameters = array('user' => $username, 'serverId' => $server);
         $request = $this->request('http://session.minecraft.net/game/checkserver.jsp', $parameters);
-        if ($request == 'YES') {
-            return true;
-        } else {
-            return false;
-        }
+        return $request == 'YES';
     }
 
     public function render_skin($username, $render_type, $size) {
