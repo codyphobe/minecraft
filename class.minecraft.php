@@ -97,7 +97,8 @@ class minecraft {
      * This function firstly checks the user specified has a premium account,
      * then returns an url to the skin file for that user if a custom skin was found.
      *
-     * @param  string $username The username to check (if ommited, will use the last user of a successfull signin call)
+     * @param  string $username The username to get skin from (if ommited, will use the
+     *                              last user of a successfull signin call)
      * @return string / false
      */
     public function getSkinUrl($username = false) {
@@ -120,7 +121,8 @@ class minecraft {
      * sent to the Minecraft servers every 600 ticks (60 seconds) otherwise the user is signed out.
      *
      * @param  string $session  The session token
-     * @param  string $username
+     * @param  string $username The username to keep alive (if ommited, will use the last user
+     *                              of a successfull signin call)
      * @return '--' (Strange return value, wonder if it's normal...)
      */
     public function keepAlive($session = false, $username = false) {
@@ -134,26 +136,19 @@ class minecraft {
         return $this->_request('https://login.minecraft.net/session', $parameters);
     }
 
-    public function joinServer($session, $server, $username = false) {
-        if($username === false) {
-            $username = $this->getUsername();
-        }
-
-        $parameters = array('user' => $username, 'sessionId' => $session, 'serverId' => $server);
-        $request = $this->_request('http://session.minecraft.net/game/joinserver.jsp', $parameters);
-        return $request != 'Bad login';
-    }
-
-    public function checkServer($server, $username = false) {
-        if($username === false) {
-            $username = $this->getUsername();
-        }
-
-        $parameters = array('user' => $username, 'serverId' => $server);
-        $request = $this->_request('http://session.minecraft.net/game/checkserver.jsp', $parameters);
-        return $request == 'YES';
-    }
-
+    /**
+     * This function renders the specified player's skin.
+     * Please note when rendering the full body, the image width is half the size of the image height.
+     * You can include this function directly inside a img tag by using the following example...
+     *
+     * <img src="<?= $minecraft->render_skin('nblackburn', 'head', 100) ?>">
+     *
+     * @param  string  $render_type Enum of 'head', 'body'
+     * @param  int     $size        Size of the generated skin
+     * @param  string  $username    The username to get the skin from (if ommited, will use
+     *                                  the last user of a successfull signin call)
+     * @return binary/false
+     */
     public function renderSkin($render_type, $size, $username = false) {
         if($username === false) {
             $username = $this->getUsername();
