@@ -119,6 +119,8 @@ This function return the username of the last successfully signed in user.
 
 If no user has been successfully signed in, this function will throw an **exception**.
 
+---
+
 #### Get Last Error
 
 ```php
