@@ -8,7 +8,7 @@
      * @license:     http://creativecommons.org/licenses/by/3.0/legalcode
     */
 
-class minecraft {
+class Minecraft {
 
     public $account = false;
     protected $_lastError = false;
@@ -141,7 +141,7 @@ class minecraft {
      * Please note when rendering the full body, the image width is half the size of the image height.
      * You can include this function directly inside a img tag by using the following example...
      *
-     * <img src="<?= $minecraft->render_skin('nblackburn', 'head', 100) ?>">
+     * <img src="data:image/png;base64,<?= base64_encode($minecraft->renderSkin('nblackburn', 'head', 100)) ?>">
      *
      * @param  string  $render_type Enum of 'head', 'body'
      * @param  int     $size        Size of the generated skin
@@ -155,13 +155,14 @@ class minecraft {
         }
 
         if (in_array($render_type, array('head', 'body'))) {
-            header('Content-Type: image/png');
+            ob_start();
             if ($render_type == 'head') {
                 $canvas = imagecreatetruecolor($size, $size);
                 $image = imagecreatefrompng($this->getSkinUrl($username));
                 imagecopyresampled($canvas, $image, 0, 0, 8, 8, $size, $size, 8, 8);
 
-                return imagepng($canvas);
+                imagepng($canvas);
+                return ob_get_clean();
             }
 
             if($render_type == 'body') {
@@ -172,14 +173,15 @@ class minecraft {
                 imagesavealpha($canvas,true);
                 $transparent = imagecolorallocatealpha($canvas, 255, 255, 255, 127);
                 imagefilledrectangle($canvas, 0, 0, 16*$scale, 32*$scale, $transparent);
-                imagecopyresized  ($canvas, $image, 4*$scale,  0*$scale,  8,   8,   8*$scale,  8*$scale,  8,  8);
-                imagecopyresized  ($canvas, $image, 4*$scale,  8*$scale,  20,  20,  8*$scale,  12*$scale, 8,  12);
-                imagecopyresized  ($canvas, $image, 0*$scale,  8*$scale,  44,  20,  4*$scale,  12*$scale, 4,  12);
-                imagecopyresampled($canvas, $image, 12*$scale, 8*$scale,  47,  20,  4*$scale,  12*$scale, -4,  12);
-                imagecopyresized  ($canvas, $image, 4*$scale,  20*$scale, 4,   20,  4*$scale,  12*$scale, 4,  12);
-                imagecopyresampled($canvas, $image, 8*$scale,  20*$scale, 7,   20,  4*$scale,  12*$scale, -4,  12);
+                imagecopyresized  ($canvas, $image, 4*$scale,  0*$scale,  8,  8,  8*$scale, 8*$scale,  8,  8);
+                imagecopyresized  ($canvas, $image, 4*$scale,  8*$scale,  20, 20, 8*$scale, 12*$scale, 8,  12);
+                imagecopyresized  ($canvas, $image, 0*$scale,  8*$scale,  44, 20, 4*$scale, 12*$scale, 4,  12);
+                imagecopyresampled($canvas, $image, 12*$scale, 8*$scale,  47, 20, 4*$scale, 12*$scale, -4, 12);
+                imagecopyresized  ($canvas, $image, 4*$scale,  20*$scale, 4,  20, 4*$scale, 12*$scale, 4,  12);
+                imagecopyresampled($canvas, $image, 8*$scale,  20*$scale, 7,  20, 4*$scale, 12*$scale, -4, 12);
 
-                return imagepng($canvas);
+                imagepng($canvas);
+                return ob_get_clean();
             }
         }
 
