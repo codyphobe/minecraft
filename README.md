@@ -104,7 +104,26 @@ You can include this function directly inside a **img** tag by using the followi
 example...
 
 ```html
-<img src="<?= $minecraft->render_skin('nblackburn', 'head', 100) ?>">
+<img src="data:image/png;base64,<?= base64_encode($minecraft->renderSkin('head', 64, 'nblackburn')) ?>">
+```
+
+If you want to call a php script which generate rendered skin, you can also use it like that :
+
+```php
+<?php
+
+require 'class.minecraft.php';
+
+header('Content-Type: image/png');
+$mc = new Minecraft();
+// parameters can be passed by GET e.g.
+echo $mc->renderSkin('head', 64, 'nblackburn');
+```
+
+So in your html file, you can just like it like an ordinary image.
+
+```html
+<img src="path/to/your/script.php">
 ```
 
 ---
@@ -118,8 +137,6 @@ $minecraft->getUsername();
 This function return the username of the last successfully signed in user.
 
 If no user has been successfully signed in, this function will throw an **exception**.
-
----
 
 #### Get Last Error
 
