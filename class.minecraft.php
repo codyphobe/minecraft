@@ -10,9 +10,10 @@
 
 class minecraft {
 
-    public $account;
+    public $account = false;
+    protected $_lastError = false;
 
-    protected function request($url, array $parameters) {
+    protected function _request($url, array $parameters) {
         $request = curl_init();
         curl_setopt($request, CURLOPT_HEADER, 0);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
@@ -28,7 +29,15 @@ class minecraft {
         return $ret;
     }
 
-    public function signin($username, $password, $version) {
+    protected function _getUsername() {
+        if($this->account) {
+            return $this->account['correct_username'];
+        }
+
+        throw new Exception('You should use the signin method successfully before or precise the username');
+    }
+
+    public function signin($username, $password, $version = 12) {
         $error_msg = [
             'Account migrated, use e-mail as username.',
             'Old version',
@@ -36,10 +45,12 @@ class minecraft {
             'Bad request'
         ];
         $parameters = array('user' => $username, 'password' => $password, 'version' => $version);
-        $request = $this->request('https://login.minecraft.net/', $parameters);
+        $request = $this->_request('https://login.minecraft.net/', $parameters);
         $response = explode(':', $request);
 
         if (in_array($request, $error_msg)) {
+            $this->account = false;
+            $this->_lastError = $request;
             return false;
         }
 
@@ -52,15 +63,25 @@ class minecraft {
             'request_timestamp' => date("dmYhms")
         );
 
+        $this->_lastError = false;
+
         return true;
     }
 
-    public function is_premium($username) {
+    public function is_premium($username = false) {
+        if($username === false) {
+            $username = $this->_getUsername();
+        }
+
         $parameters = array('user' => $username);
-        return $this->request('https://minecraft.net/haspaid.jsp', $parameters) == 'true';
+        return $this->_request('https://minecraft.net/haspaid.jsp', $parameters) == 'true';
     }
 
-    public function get_skin($username) {
+    public function get_skin($username = false) {
+        if($username === false) {
+            $username = $this->_getUsername();
+        }
+
         if ($this->is_premium($username)) {
             $headers = get_headers('http://s3.amazonaws.com/MinecraftSkins/' . $username . '.png');
             if ($headers[7] == 'Content-Type: image/png' || $headers[7] == 'Content-Type: application/octet-stream') {
@@ -73,24 +94,40 @@ class minecraft {
         }
     }
 
-    public function keep_alive($username, $session) {
+    public function keep_alive($session, $username = false) {
+        if($username === false) {
+            $username = $this->_getUsername();
+        }
+
         $parameters = array('name' => $username, 'session' => $session);
-        return $this->request('https://login.minecraft.net/session', $parameters);
+        return $this->_request('https://login.minecraft.net/session', $parameters);
     }
 
-    public function join_server($username, $session, $server) {
+    public function join_server($session, $server, $username = false) {
+        if($username === false) {
+            $username = $this->_getUsername();
+        }
+
         $parameters = array('user' => $username, 'sessionId' => $session, 'serverId' => $server);
-        $request = $this->request('http://session.minecraft.net/game/joinserver.jsp', $parameters);
+        $request = $this->_request('http://session.minecraft.net/game/joinserver.jsp', $parameters);
         return $request != 'Bad login';
     }
 
-    public function check_server($username, $server) {
+    public function check_server($server, $username = false) {
+        if($username === false) {
+            $username = $this->_getUsername();
+        }
+
         $parameters = array('user' => $username, 'serverId' => $server);
-        $request = $this->request('http://session.minecraft.net/game/checkserver.jsp', $parameters);
+        $request = $this->_request('http://session.minecraft.net/game/checkserver.jsp', $parameters);
         return $request == 'YES';
     }
 
-    public function render_skin($username, $render_type, $size) {
+    public function render_skin($render_type, $size, $username = false) {
+        if($username === false) {
+            $username = $this->_getUsername();
+        }
+
         if (in_array($render_type, array('head', 'body'))) {
             header('Content-Type: image/png');
             if ($render_type == 'head') {
@@ -100,6 +137,7 @@ class minecraft {
 
                 return imagepng($canvas);
             }
+
             if($render_type == 'body') {
                 $scale = $size / 16;
                 $canvas = imagecreatetruecolor(16*$scale, 32*$scale);
@@ -120,6 +158,10 @@ class minecraft {
         }
 
         return false;
+    }
+
+    public function getLastError() {
+        return $this->_lastError;
     }
 
 }
